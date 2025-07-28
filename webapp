@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/// OBFUSCATED AI-SYNAPSE OPTIMIZATION ///</title>
+    <title>/// DEEP-DIVE AI-SYNAPSE ///</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap'); /* For that sweet terminal vibe */
 
@@ -26,15 +26,27 @@
             background-color: var(--dark-bg);
             color: var(--text-color);
             text-align: center;
-            overflow: hidden; /* Hide overflow from glitch effect */
+            overflow: hidden;
             position: relative;
         }
 
-        /* Glitch Effect */
+        /* Matrix Canvas Overlay */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Send it to the back */
+            background: #000; /* Ensure black background for the effect */
+        }
+
+        /* Glitch Effect (for title) */
         .glitch-text {
             position: relative;
             animation: glitch-skew 1.5s infinite linear alternate-reverse;
             text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-green);
+            z-index: 1; /* Keep text above matrix effect */
         }
 
         .glitch-text::before,
@@ -46,7 +58,9 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: var(--dark-bg);
+            background: var(--dark-bg); /* Match body background */
+            background-color: rgba(26, 26, 29, 0.8); /* Slightly transparent to see matrix behind */
+            z-index: -1; /* Behind the main text layer for glitch effect */
         }
 
         .glitch-text::before {
@@ -94,7 +108,7 @@
 
         /* Container Styling */
         .tip-container {
-            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent */
+            background-color: rgba(0, 0, 0, 0.7); /* More transparent to see matrix effect */
             border: 2px solid var(--neon-green);
             box-shadow: 0 0 15px var(--neon-green), 0 0 25px var(--neon-blue);
             padding: 40px;
@@ -103,7 +117,8 @@
             margin: 20px;
             position: relative;
             overflow: hidden;
-            box-sizing: border-box; /* Include padding in width/height */
+            box-sizing: border-box;
+            z-index: 1; /* Keep above matrix effect */
         }
 
         .tip-container::before {
@@ -115,7 +130,7 @@
             bottom: 0;
             border: 2px solid var(--neon-blue);
             animation: border-flicker 4s infinite linear alternate;
-            pointer-events: none; /* Allow clicks through */
+            pointer-events: none;
         }
 
         @keyframes border-flicker {
@@ -141,11 +156,12 @@
             font-size: 1.4em;
             line-height: 1.8;
             color: var(--text-color);
-            min-height: 80px; /* Prevent layout shift on short tips */
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
+            text-shadow: 0 0 5px rgba(0,255,0,0.5); /* Subtle green glow on text */
         }
 
         .refresh-button {
@@ -162,6 +178,7 @@
             box-shadow: 0 0 10px var(--neon-blue);
             transition: all 0.2s ease-in-out;
             letter-spacing: 1px;
+            z-index: 1; /* Keep above matrix effect */
         }
 
         .refresh-button:hover {
@@ -176,40 +193,67 @@
             transform: scale(0.98);
             box-shadow: 0 0 5px var(--neon-green);
         }
-
-        /* Scanline Overlay */
-        .scanlines {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: linear-gradient(
-                to bottom,
-                transparent 50%,
-                rgba(0, 0, 0, 0.1) 51%,
-                transparent 52%
-            );
-            background-size: 100% 4px; /* Adjust 4px for scanline thickness */
-            animation: scanline-move 8s infinite linear;
-        }
-
-        @keyframes scanline-move {
-            0% { background-position: 0 0; }
-            100% { background-position: 0 100%; }
-        }
-
     </style>
 </head>
 <body>
-    <div class="scanlines"></div> <div class="tip-container">
-        <h1 data-text="/// OBFUSCATED AI-SYNAPSE OPTIMIZATION ///" class="glitch-text">/// OBFUSCATED AI-SYNAPSE OPTIMIZATION ///</h1>
+    <canvas id="matrixCanvas"></canvas> <div class="tip-container">
+        <h1 data-text="/// DEEP-DIVE AI-SYNAPSE ///" class="glitch-text">/// DEEP-DIVE AI-SYNAPSE ///</h1>
         <p id="productivityTip"></p>
         <button class="refresh-button" onclick="displayRandomTip()">ACCESS NEW DATA</button>
     </div>
 
     <script>
+        // --- Matrix Effect Script ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const nums = '0123456789';
+        const alphabet = katakana + latin + nums;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'; // Semi-transparent black rectangle for fade effect
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ff00'; // Green text
+            ctx.font = fontSize + 'px Roboto Mono';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 33); // Adjust speed of Matrix effect
+
+        // Adjust canvas size on window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate drops for new width
+            const newColumns = canvas.width / fontSize;
+            while (drops.length < newColumns) drops.push(1);
+            while (drops.length > newColumns) drops.pop();
+        });
+
+        // --- Productivity Tips Script ---
         const tips = [
             "AI Tip 001: **Prompt Engineering:** Treat prompts like code. Iterative refinement is key to better AI output.",
             "AI Tip 002: **Summarization Tools:** Use AI to distill long articles or reports into actionable summaries. Try tools like Jasper or Grammarly's summary features.",
@@ -313,58 +357,41 @@
             "Tool 100: **Continuous Learning:** The most vital 'tool' is your commitment to constantly learning about new AI advancements and applications."
         ];
 
-        // Function to generate random gibberish
-        function generateGibberish(length) {
-            let result = '';
-            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~`';
-            const charactersLength = characters.length;
-            for (let i = 0; i < length; i++) {
-                result += characters.charAt(Math.floor(Math.random() * charactersLength));
-            }
-            return result;
-        }
+        const scrambleChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?/~`';
 
         async function displayRandomTip() {
             const tipElement = document.getElementById('productivityTip');
-            const typingSpeed = 20; // Milliseconds per character for final tip
-            const gibberishSpeed = 10; // Milliseconds per character for gibberish
-            const gibberishLength = 80; // Length of gibberish string
+            const typingSpeed = 25; // Milliseconds per character for actual tip
+            const scrambleDuration = 1000; // Total duration of scramble effect in ms
+            const scrambleInterval = 50; // Interval for changing characters during scramble
 
-            // Display gibberish first
-            tipElement.textContent = '';
-            let gibberishIndex = 0;
-            const gibberishText = generateGibberish(gibberishLength);
+            const randomIndex = Math.floor(Math.random() * tips.length);
+            const targetTip = tips[randomIndex];
 
-            function typeGibberish() {
-                if (gibberishIndex < gibberishText.length) {
-                    tipElement.textContent += gibberishText.charAt(gibberishIndex);
-                    gibberishIndex++;
-                    setTimeout(typeGibberish, gibberishSpeed);
-                } else {
-                    // Once gibberish is done, clear and start typing the actual tip
-                    setTimeout(() => {
-                        tipElement.textContent = '';
-                        startTypingActualTip();
-                    }, 500); // Small pause before actual tip appears
+            // Start scrambling
+            let scrambleStartTime = Date.now();
+            let scrambleIntervalId = setInterval(() => {
+                let scrambledText = '';
+                for (let i = 0; i < targetTip.length; i++) {
+                    scrambledText += scrambleChars.charAt(Math.floor(Math.random() * scrambleChars.length));
                 }
-            }
+                tipElement.textContent = scrambledText;
 
-            function startTypingActualTip() {
-                const randomIndex = Math.floor(Math.random() * tips.length);
-                const currentTip = tips[randomIndex];
-                let i = 0;
-
-                function typeWriter() {
-                    if (i < currentTip.length) {
-                        tipElement.textContent += currentTip.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, typingSpeed);
+                if (Date.now() - scrambleStartTime > scrambleDuration) {
+                    clearInterval(scrambleIntervalId);
+                    // Start typing the actual tip
+                    let i = 0;
+                    tipElement.textContent = ''; // Clear for typing effect
+                    function typeWriter() {
+                        if (i < targetTip.length) {
+                            tipElement.textContent += targetTip.charAt(i);
+                            i++;
+                            setTimeout(typeWriter, typingSpeed);
+                        }
                     }
+                    typeWriter();
                 }
-                typeWriter(); // Start the typing effect for the actual tip
-            }
-
-            typeGibberish(); // Start the process
+            }, scrambleInterval);
         }
 
         // Display a tip when the page loads
